@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class Antenna(object):
     def __init__(self):
+        self.cache = ""
         Antenna.setup_logging()
         logger.debug("Application started")
         parser = argparse.ArgumentParser(description='Antenna', 
@@ -24,7 +25,6 @@ class Antenna(object):
             parser.print_help()
             exit(1)
         getattr(self, args.command)()
-
 
     def monitor(self):
         parser = argparse.ArgumentParser(
@@ -38,17 +38,22 @@ class Antenna(object):
         except Exception as e:
             logger.error(f"Error starting sniffer: {e}")
 
-
     def packet_callback(self, packet):
         # probe request packets
         if packet.type == 0 and packet.subtype == 4:
             if packet.info.decode('utf-8') == "":
-                logger.info(f"Probe Broadcast > {packet.addr2}")
+                message = f"Probe Broadcast > {packet.addr2}"
+                self.print_cached(message)
             else:
-                logger.info(f"Probe Request > {packet.addr2} - {packet.info.decode('utf-8')}")
+                message = f"Probe Request > {packet.addr2} - {packet.info.decode('utf-8')}"
+                self.print_cached(message)
         #if packet.type == 0 and packet.subtype == 8:
         #    logger.info(f"Beacon > {packet.addr2} > {packet.info.decode('utf-8')}")
 
+    def print_cached(self, message):
+        if message != self.cache:
+            logger.info(f"{message}")
+            self.cache = message
 
     @staticmethod
     def setup_logging():
