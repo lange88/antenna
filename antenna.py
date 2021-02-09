@@ -34,7 +34,7 @@ class Antenna(object):
         args = parser.parse_args(sys.argv[2:])
 
         try:
-            sniff(iface=args.interface, prn=self.packet_callback)
+            sniff(iface=args.interface, prn=self.packet_callback, store=0)
         except Exception as e:
             logger.error(f"Error starting sniffer: {e}")
 
