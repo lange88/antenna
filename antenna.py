@@ -40,15 +40,18 @@ class Antenna(object):
 
     def packet_callback(self, packet):
         # probe request packets
-        if packet.type == 0 and packet.subtype == 4:
-            if packet.info.decode('utf-8') == "":
-                message = f"Probe Broadcast > {packet.addr2}"
-                self.print_cached(message)
-            else:
-                message = f"Probe Request > {packet.addr2} - {packet.info.decode('utf-8')}"
-                self.print_cached(message)
-        #if packet.type == 0 and packet.subtype == 8:
-        #    logger.info(f"Beacon > {packet.addr2} > {packet.info.decode('utf-8')}")
+        try:
+            if packet.type == 0 and packet.subtype == 4:
+                if packet.info.decode('utf-8') == "":
+                    message = f"Probe Broadcast > {packet.addr2}"
+                    self.print_cached(message)
+                else:
+                    message = f"Probe Request > {packet.addr2} - {packet.info.decode('utf-8')}"
+                    self.print_cached(message)
+            #if packet.type == 0 and packet.subtype == 8:
+            #    logger.info(f"Beacon > {packet.addr2} > {packet.info.decode('utf-8')}")
+        except Exception as e:
+            logger.error(f"Error parsing packet: {e}")
 
     def print_cached(self, message):
         if message != self.cache:
