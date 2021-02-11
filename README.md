@@ -11,7 +11,7 @@ apt install python3-scapy
 
 # Quickstart
 
-Put the wireless interface in monitor mode before starting Antenna.
+Put the wireless interface in monitor mode and create a logs/ directory before starting Antenna.
 
 Run using:
 ```bash
